@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NotesService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -30,6 +31,9 @@ public class HomeController {
     @Autowired
     private NotesService notesService;
 
+    @Autowired
+    private CredentialService credentialService;
+
     @RequestMapping(value = {"/", "/login"})
     public String home(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
@@ -39,7 +43,7 @@ public class HomeController {
         User savedUser = userService.getByUserName(user.getUsername());
 
         model.addAttribute("files", fileService.getAllFilesByUserId(savedUser.getUserid()));
-//                add credentials
+        model.addAttribute("credentials", credentialService.getAllByUserid(savedUser.getUserid()));
         model.addAttribute("notes", notesService.getAllByUserid(savedUser.getUserid()));
         return "home";
     }

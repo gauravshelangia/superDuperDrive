@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
     public User register(User user) {
         String encryptedPW = encoder.encode(user.getPassword());
         user.setPassword(encryptedPW); // only persist encoded password
-
         userMapper.register(user);
         return user;
     }
@@ -32,7 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUserName(String userName) {
         User user = userMapper.findByUsername(userName);
-//        user.setFiles(fileService.getAllFilesByUserId(user.getUserid()));
         return user;
+    }
+
+    @Override
+    public User getByUserid(Integer userid) {
+        return userMapper.findOne(userid);
     }
 }

@@ -43,7 +43,4 @@ public class NotesController {
         return new ModelAndView("redirect:/", model);
     }
 
-
-
-
 }

@@ -157,7 +157,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:if="${#lists.isEmpty(credentials)}">
                                     <td>
                                         <button type="button" class="btn btn-success">Edit</button>
                                         <a class="btn btn-danger">Delete</a>
@@ -166,6 +166,17 @@
                                     <td>Example Credential Username</td>
                                     <td>Example Credential Password</td>
                                 </tr>
+
+                                <tr th:each="credential : ${credentials}">
+                                    <td>
+                                        <button type="button" class="btn btn-success" th:onclick="javascript:showCredentialModal([[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]],[[${credential.password}]] );decryptPassword([[${credential.credentialid}]])">Edit</button>
+                                        <a th:href="@{/delete-credential/{credid}(credid=${credential.credentialid})}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                    <th scope="row" th:text="${credential.url}"></th>
+                                    <td th:text="${credential.username}"></td>
+                                    <td th:text="${credential.password}"></td>
+                                </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -180,8 +191,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
-                                            <input type="hidden" name="credentialId" id="credential-id">
+                                        <form th:action="@{/add-credential}" method="POST" th:object="${Credential}">
+                                            <input type="hidden" name="credentialid" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
@@ -231,6 +242,17 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
+
+            function decryptPassword(credentialid){
+            	let result = fetch('/decrypt-credential/'+credentialid).then((response) => response.json())
+            	  .then((data) => {
+            		  $('#credential-password').val(data[0].toString());
+            	  });
+
+            	;
+
+            }
+
         </script>
     </body>
 </html>
