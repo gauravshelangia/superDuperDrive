@@ -10,13 +10,13 @@ import org.springframework.security.core.GrantedAuthority;
 @Data
 public class User {
 
-    private int id;
+    private int userid;
     private String username;
     private String salt;
     private String password;
     private String firstName;
     private String lastName;
-    private boolean enabled;
+
     private String role;
     private List <File> files;
     private List <Notes> notes;

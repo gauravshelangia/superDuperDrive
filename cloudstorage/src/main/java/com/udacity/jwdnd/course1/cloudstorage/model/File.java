@@ -5,10 +5,11 @@ import lombok.Data;
 @Data
 public class File {
 
-    private int id;
+    private int fileid;
     private String filename;
-    private String contentType;
-    private String fileSize;
-    private byte[] fileData;
+    private String contenttype;
+    private Long filesize;
+    private byte[] filedata;
+    private Integer userid;
 
 }

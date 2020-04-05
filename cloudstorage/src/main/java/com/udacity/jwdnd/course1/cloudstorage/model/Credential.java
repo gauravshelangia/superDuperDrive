@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Credential {
 
-    private int id;
+    private Integer credentialid;
     private String url;
     private String username;
-    private String key;
+    private String skeleton;
     private String password;
-
+    private Integer userid;
 }

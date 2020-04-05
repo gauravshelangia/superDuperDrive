@@ -18,11 +18,11 @@ public interface UserMapper {
     @Select("select * from users where users.userid = #{id}")
     User findOne(@Param("id") Integer id);
 
-    @Select("select * from users where users.username = #{user.username}")
-    User getByUsername(@Param("user") User user);
+    @Select("select * from users where users.username = #{userName}")
+    User findByUsername(String userName);
 
 
-    @Insert("insert into users (username,password,firstname,lastname) values (#{user.username},#{user.password},#{user.firstName},#{user.lastName})")
+    @Insert("insert into users (username,password,firstname,lastname) values (#{user.username},#{user.password},#{user.firstname},#{user.lastname})")
     Integer register(@Param("user") User user);
 
 }

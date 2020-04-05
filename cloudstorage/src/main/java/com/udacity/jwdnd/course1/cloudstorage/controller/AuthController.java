@@ -2,7 +2,9 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NotesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -26,10 +29,7 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private UserMapper usersMapper;
-
-    @Autowired
-    private NotesMapper notesMapper;
+    private FileService fileService;
 
     @RequestMapping(path = "/authenticate", method = RequestMethod.GET)
     public String authenticate(Principal principal) {
@@ -41,16 +41,19 @@ public class AuthController {
 
         if(user.getUsername() != null) {
             System.err.println(user.getUsername());
-            User savedUser = usersMapper.getByUsername(user);
+            User savedUser = userService.getByUserName(user.getUsername());
 
             if (ObjectUtils.isEmpty(savedUser)) {
                 model.addAttribute("invalidLogin", true);
-                return new ModelAndView("login", model);
+                return new ModelAndView("redirect:/login", model);
             }
 
             if (BCrypt.checkpw(user.getPassword(), savedUser.getPassword())) {
                 session.setAttribute("user", savedUser);
-                return new ModelAndView("redirect:/login", model);
+                model.addAttribute("files", fileService.getAllFilesByUserId(savedUser.getUserid()));
+//                add credentials
+//                add notes
+                return new ModelAndView("home", model);
             }
         }
 
@@ -58,7 +61,7 @@ public class AuthController {
         return new ModelAndView("login", model);
     }
 
-    @RequestMapping("/logout.do")
+    @RequestMapping("/perform-logout")
     public ModelAndView logout(HttpSession session, ModelMap model) {
         session.setAttribute("user", null);
         model.addAttribute("logoutSuccess", true);
