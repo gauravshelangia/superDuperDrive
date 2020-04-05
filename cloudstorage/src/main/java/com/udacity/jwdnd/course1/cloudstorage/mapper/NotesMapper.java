@@ -16,7 +16,7 @@ public interface NotesMapper {
 
 
     @Insert("insert into notes(notetitle,notedescription, userid ) VALUES (#{note.notetitle}, #{note.notedescription}, #{userid})")
-    Integer addNotetoDatabase(@Param("note") Notes note, @Param("userid") Integer userid);
+    Integer saveNote(@Param("note") Notes note, @Param("userid") Integer userid);
 
     @Update("UPDATE notes SET notetitle = #{note.notetitle}, notedescription = #{note.notedescription} WHERE noteid = #{note.noteid}")
     Integer updateNote(@Param("note") Notes note);

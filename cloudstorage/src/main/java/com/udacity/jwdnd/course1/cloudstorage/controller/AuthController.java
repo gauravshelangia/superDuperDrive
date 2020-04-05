@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.services.NotesService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -31,6 +32,9 @@ public class AuthController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private NotesService notesService;
+
     @RequestMapping(path = "/authenticate", method = RequestMethod.GET)
     public String authenticate(Principal principal) {
         return "home";
@@ -40,7 +44,6 @@ public class AuthController {
     public ModelAndView login(@ModelAttribute("SpringWeb") User user, HttpSession session, ModelMap model) {
 
         if(user.getUsername() != null) {
-            System.err.println(user.getUsername());
             User savedUser = userService.getByUserName(user.getUsername());
 
             if (ObjectUtils.isEmpty(savedUser)) {
@@ -50,10 +53,7 @@ public class AuthController {
 
             if (BCrypt.checkpw(user.getPassword(), savedUser.getPassword())) {
                 session.setAttribute("user", savedUser);
-                model.addAttribute("files", fileService.getAllFilesByUserId(savedUser.getUserid()));
-//                add credentials
-//                add notes
-                return new ModelAndView("home", model);
+                return new ModelAndView("redirect:/", model);
             }
         }
 
