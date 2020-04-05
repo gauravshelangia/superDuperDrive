@@ -34,13 +34,28 @@ public class HomeController {
     @Autowired
     private CredentialService credentialService;
 
-    @RequestMapping(value = {"/", "/login"})
-    public String home(HttpSession session, Model model) {
+    @RequestMapping(value = {"/", "/login", "/home"})
+    public String login(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (session.getAttribute("user") == null) {
             return "login";
         }
-        User savedUser = userService.getByUserName(user.getUsername());
+        User savedUser = userService.getByUserName(user.getUserName());
+
+        model.addAttribute("files", fileService.getAllFilesByUserId(savedUser.getUserid()));
+        model.addAttribute("credentials", credentialService.getAllByUserid(savedUser.getUserid()));
+        model.addAttribute("notes", notesService.getAllByUserid(savedUser.getUserid()));
+        return "home";
+    }
+
+    @RequestMapping(value = {"/home"})
+    public String home(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (session.getAttribute("user") == null) {
+            model.addAttribute("notLoggedIn", true);
+            return "login";
+        }
+        User savedUser = userService.getByUserName(user.getUserName());
 
         model.addAttribute("files", fileService.getAllFilesByUserId(savedUser.getUserid()));
         model.addAttribute("credentials", credentialService.getAllByUserid(savedUser.getUserid()));

@@ -43,8 +43,8 @@ public class AuthController {
     @RequestMapping("/login-perform")
     public ModelAndView login(@ModelAttribute("SpringWeb") User user, HttpSession session, ModelMap model) {
 
-        if(user.getUsername() != null) {
-            User savedUser = userService.getByUserName(user.getUsername());
+        if(user.getUserName() != null) {
+            User savedUser = userService.getByUserName(user.getUserName());
 
             if (ObjectUtils.isEmpty(savedUser)) {
                 model.addAttribute("invalidLogin", true);
@@ -70,7 +70,12 @@ public class AuthController {
 
     @RequestMapping(path = "/register-perform", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("SpringWeb") User user, HttpServletResponse res, ModelMap modelMap) {
-
+        //Check if username is already in use
+        User existingUser  = userService.getByUserName(user.getUserName());
+        if (!ObjectUtils.isEmpty(existingUser)){
+            modelMap.addAttribute("userNameExist", true);
+            return new ModelAndView("signup", modelMap);
+        }
         if (user == null) {
             res.setStatus(400);
         }

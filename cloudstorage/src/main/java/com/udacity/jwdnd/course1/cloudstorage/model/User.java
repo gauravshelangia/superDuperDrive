@@ -11,7 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 public class User {
 
     private int userid;
-    private String username;
+    private String userName;
     private String salt;
     private String password;
     private String firstName;

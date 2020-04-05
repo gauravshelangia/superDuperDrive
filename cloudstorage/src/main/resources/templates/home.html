@@ -24,10 +24,13 @@
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
+                    <div th:if="${fileUploadSuccess}" class="alert alert-success">
+                        File uploaded successfully!!
+                    </div>
+                    <div th:if="${fileUploadEmpty}" class="alert alert-info">
+                        Please select a file. Can't upload null/empty file.
+                    </div>
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <div th:if="${fileUploadSuccess}" class="alert alert-success">
-                            File uploaded successfully!!
-                        </div>
                         <form th:action="@{/file-upload}" enctype="multipart/form-data" method="POST">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">

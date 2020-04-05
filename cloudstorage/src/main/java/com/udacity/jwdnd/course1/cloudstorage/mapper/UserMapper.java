@@ -22,7 +22,7 @@ public interface UserMapper {
     User findByUsername(String userName);
 
 
-    @Insert("insert into users (username,password,firstname,lastname) values (#{user.username},#{user.password},#{user.firstname},#{user.lastname})")
+    @Insert("insert into users (username,password,firstname,lastname) values (#{user.userName},#{user.password},#{user.firstName},#{user.lastName})")
     Integer register(@Param("user") User user);
 
 }

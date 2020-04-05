@@ -32,11 +32,16 @@ public class FileController {
     @RequestMapping(value = "/file-upload", method = RequestMethod.POST)
     public ModelAndView upload(@ModelAttribute("SpringWeb") MultipartFile fileUpload, HttpSession session, ModelMap model){
         User user = (User) session.getAttribute("user");
-        File file = fileService.upload(fileUpload, user.getUserid());
+        // validate file upload request
+        if (fileUpload.isEmpty()){
+            model.addAttribute("fileUploadEmpty", true);
+            return new ModelAndView("redirect:/", model);
+        }
+
+        fileService.upload(fileUpload, user.getUserid());
         model.addAttribute("fileUploadSuccess", true);
-        List<File> files = fileService.getAllFilesByUserId(user.getUserid());
-        model.addAttribute("files",files);
-        return new ModelAndView("home", model);
+        model.addAttribute("files",fileService.getAllFilesByUserId(user.getUserid()));
+        return new ModelAndView("redirect:/", model);
     }
 
     @RequestMapping(value = "/file-delete/{fileid}")
