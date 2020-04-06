@@ -66,7 +66,7 @@
 
                                 <tr th:each="file : ${files}">
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
+                                        <a target="_blank" class="btn btn-success" th:onclick="javascript:showImage([[${file.fileid}]]);">View</a>
                                         <img th:id="${file.fileid}" th:src="*{'/file/view/' + file.fileid}" width="150px" height="150px" style="display:none" alt= "image not able to display"/>
                                         <a th:href="@{/file-delete/{fileid}(fileid=${file.fileid})}" class="btn btn-danger" th:method="delete">Delete</a>
                                     </td>
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button style="margin: 0.25em;" type="button" id="addNoteButton" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -138,14 +138,14 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
+                                        <button type="button" id="save-note-id" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button style="margin: 0.25em;" id="credentialbutton" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
 
@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                        <button type="button"id="save-credential" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
@@ -251,9 +251,17 @@
             	  .then((data) => {
             		  $('#credential-password').val(data[0].toString());
             	  });
+            }
 
-            	;
+            function showImage(fileid){
+                var image = document.getElementById(fileid);
 
+                if(image.style.display == "block"){
+                    console.log('TES');
+                    image.style.display="none";
+                } else{
+                    image.style.display="block";
+                }
             }
 
         </script>
