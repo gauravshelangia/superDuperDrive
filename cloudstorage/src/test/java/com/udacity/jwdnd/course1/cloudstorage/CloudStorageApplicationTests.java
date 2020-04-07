@@ -6,13 +6,21 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.ObjectUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CloudStorageApplicationTests {
 
 	private static String USER_NAME = "userName";
@@ -26,14 +34,14 @@ class CloudStorageApplicationTests {
 	private int port;
 
 	private WebDriver driver;
-
+	
 	@BeforeAll
 	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
 	}
 
 	@BeforeEach
-	public void beforeEach() {
+	public void beforeEach() throws SQLException {
 		this.driver = new ChromeDriver();
 	}
 
@@ -52,7 +60,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	@Order(2)
+	@Order(4)
 	public void testLoginSuccess(){
 		driver.get("http://localhost:" + this.port + "/");
 		driver.manage().window().maximize();
@@ -67,7 +75,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	@Order(3)
+	@Order(2)
 	public void testSignUpPageAccessSuccess(){
 		driver.get("http://localhost:" + this.port + "/");
 		driver.manage().window().maximize();
@@ -79,7 +87,7 @@ class CloudStorageApplicationTests {
 
 
 	@Test
-	@Order(4)
+	@Order(3)
 	public void testSignUpSuccess(){
 		WebDriverWait wait = new WebDriverWait (driver, 30);
 
@@ -125,7 +133,8 @@ class CloudStorageApplicationTests {
 		password.sendKeys(PASSWORD);
 
 		WebElement login = driver.findElement(By.id("login"));
-		wait.until(ExpectedConditions.elementToBeClickable(login)).click();
+		wait.until(ExpectedConditions.elementToBeClickable(login));
+		jse.executeScript("arguments[0].click()", login);
 
 		Assertions.assertEquals("Home", driver.getTitle());
 	}

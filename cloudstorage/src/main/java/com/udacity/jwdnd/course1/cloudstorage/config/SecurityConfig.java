@@ -1,8 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage.config;
 
+import org.h2.server.web.WebServlet;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("**").permitAll()
                 .antMatchers("/register**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers( "/public/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -48,5 +52,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery(userQuery)
                 .authoritiesByUsernameQuery(authQuery)
                 .passwordEncoder(encoder);
+    }
+
+    @Bean
+    ServletRegistrationBean h2servletRegistration(){
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
+        registrationBean.addUrlMappings("/h2-console/*");
+        return registrationBean;
     }
 }
