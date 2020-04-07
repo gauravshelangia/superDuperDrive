@@ -39,6 +39,10 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Integer update(Credential credential) {
+        String skeleton = RandomStringUtils.random(16, true, true);
+        credential.setSkeleton(skeleton);
+        String encryptPW = encryptionService.encryptValue(credential.getPassword(), skeleton);
+        credential.setPassword(encryptPW);
         return credentialMapper.update(credential);
     }
 
